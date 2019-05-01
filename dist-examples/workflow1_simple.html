@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  </head>
+  <body>
+    <p>Welcome!</p>
+    <p>
+      <pre>
+This demo:
+
+- records your webcam (using HTML5 APIs) and the webpage itself
+- webcam recordings are split in multiple segments (every 180s, configurable) and uploaded to the server
+- webpage recording are uploaded at the end of the session
+- the session ends after 30 seconds
+
+Inspect the js console and network panel for more details.
+      </pre>
+    </p>
+
+    <form action="">
+      <fieldset>
+        <legend>A sample (fake) form</legend>
+        First name:<br>
+        <input type="text" name="firstname" value="Mickey"><br>
+        Last name:<br>
+        <input type="text" name="lastname" value="Mouse"><br>
+        Select:<br>
+        <select>
+          <option value="1">one</option>
+          <option value="2">two</option>
+          <option value="3">three</option>
+        </select><br>
+        <br>
+        <!-- <iframe src="https://www.crowdemotion.co.uk" height="150" width="500" /><br> -->
+        TEST CONTENT
+        <br>
+        <button type="button">Submit</button>
+      </fieldset>
+    </form>
+
+    <br>
+    <button onclick="javascript:start_recording()">start recording</button>
+
+    <br>
+    <br>
+    <div id="progress"></div>
+
+    <br>
+    <video id="preview" style="width: 320px;"></video>
+        
+
+    <script lang="text/javascript" src="src.9caef6c7.js"></script>
+    <script lang="text/javascript">const workflow = new WebRecorderWorkflow1();
+var config;
+
+async function start_recording() {
+  // stop the preview before recording
+  await workflow.stopPreview(config); // start the actual recording
+
+  await workflow.start(config); // this will stop the recording in a set time (30 seconds here)
+
+  setTimeout(() => {
+    // now show a progress animation while we upload the recordings
+    document.getElementById('progress').innerText = "Uploading...";
+    workflow.stop().then(() => {
+      // and stop it after all files have been uploaded
+      document.getElementById('progress').innerText = "Upload done!";
+    });
+  }, 30 * 1000);
+}
+
+(async () => {
+  config = {
+    apiUrl: "https://collect.crowdemotion.co.uk/upload",
+    sessionId: Date.now() + "",
+    videoSegmentDurationMs: 180 * 1000,
+    video: document.getElementById('preview') // start the preview just after the page loads and before the actual recording begins
+
+  };
+  await workflow.startPreview(config);
+})();</script>
+  </body>
+</html>
