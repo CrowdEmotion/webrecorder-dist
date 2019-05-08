@@ -39,7 +39,7 @@ Inspect the js console and network panel for more details.
     </form>
 
     <br>
-    <button onclick="javascript:start_recording()">start recording</button>
+    <button id="start_recording">start recording</button>
 
     <br>
     <br>
@@ -70,6 +70,7 @@ async function start_recording() {
 }
 
 (async () => {
+  document.getElementById('start_recording').onclick = start_recording;
   config = {
     apiUrl: "https://collect.crowdemotion.co.uk/upload",
     sessionId: Date.now() + "",
